@@ -11,7 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;family=Noto+Sans+TC:wght@300;400;500;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{overflow-x:clip}
 img,video,canvas{max-width:100%}
 @media (max-width:1100px){
   [data-m="media-grid"]>*{grid-column:span 3 !important}
@@ -24,6 +25,14 @@ img,video,canvas{max-width:100%}
 }
 @media (max-width:600px){
   [data-m="media-grid"]{gap:12px !important}
+  /* compact sticky nav: links on one swipeable row */
+  nav>div{padding:10px 16px !important;row-gap:6px !important}
+  [data-m="nav-links"]{gap:18px !important;justify-content:flex-start !important;overflow-x:auto;flex-wrap:nowrap !important;scrollbar-width:none;-webkit-overflow-scrolling:touch;font-size:12px !important}
+  [data-m="nav-links"]::-webkit-scrollbar{display:none}
+  [data-m="nav-links"]>*{flex:none;min-height:36px !important}
+  nav a[href="#contact"]{padding:8px 14px !important;min-height:36px !important;font-size:12px !important}
+  /* readable micro labels */
+  [style*="font-size: 10px"],[style*="font-size:10px"]{font-size:11px !important}
 }
 body{margin:0;background:#0a0a0b;position:relative;color:#e7edf3;font-family:'Space Grotesk','Noto Sans TC',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#ff3b30;text-decoration:none}
@@ -786,12 +795,30 @@ class Component extends DCLogic {
         image: "uploads/film/cover.jpg",
         desc: "影集與動畫短片的 CG 資產製作。依照鏡頭畫面需求完成 asset、材質貼圖、燈光與算圖，配合團隊分工完成鏡頭級品質輸出。",
         projects: [
-          { label: "FILM — 01", title: "我們與惡的距離 2", subtitle: "TV SERIES / 罡風映画", image: "uploads/film/world-02.png",
-            desc: "參與影集 CG 模型製作，擔任 3D Asset Artist。依照鏡頭畫面進行 asset、材質與燈光製作，配合實拍畫面完成 CG 整合。",
+          { label: "FILM — 01", title: "我們與惡的距離 2", subtitle: "TV SERIES / 罡風映画", image: "uploads/world/final-shot.jpg",
+            gallery: [
+              { src: "uploads/world/render-01.jpg", w: 6 },
+              { src: "uploads/world/render-02.jpg", w: 3 },
+              { src: "uploads/world/render-03.jpg", w: 3 }
+            ],
+            breakdown: [
+              { src: "uploads/world/sides.jpg", caption: "01 — 左右側視圖：車體分件與舊化材質", wide: true },
+              { src: "uploads/world/clay.png", caption: "02 — 白模：車廂連結與底盤結構細節", wide: true }
+            ],
+            desc: "參與影集 CG 模型製作，擔任 3D Asset Artist。製作台鐵 EMU 通勤電聯車資產，依實車結構分件建模，處理車體、連結通道與底盤細節並繪製鏽蝕舊化材質，最終用於列車出軌墜落的關鍵鏡頭，配合實拍畫面完成 CG 整合。",
             tags: ["MAYA", "ZBRUSH", "SUBSTANCE", "REDSHIFT", "UNREAL ENGINE"],
             specs: [{ k: "ROLE", v: "3D Asset Artist" }, { k: "STUDIO", v: "罡風映画" }, { k: "SCOPE", v: "Asset · 材質 · 燈光" }, { k: "TYPE", v: "TV Series" }] },
-          { label: "FILM — 02", title: "鬼之蝴蝶大廈", subtitle: "BUILDING ASSET / 資產製作", image: "uploads/film/butterfly-tower.png",
-            desc: "大廈建築資產製作，從量體結構、立面分件到門窗框架與細部裝飾，建立可對應鏡頭距離的建築資產與材質。",
+          { label: "FILM — 02", title: "鬼之蝴蝶大廈", subtitle: "BUILDING ASSET / 資產製作", image: "uploads/butterfly/view-01.jpg",
+            gallery: [
+              { src: "uploads/butterfly/view-02.jpg", w: 6 },
+              { src: "uploads/butterfly/detail-01.jpg", w: 2 },
+              { src: "uploads/butterfly/door-01.jpg", w: 2 },
+              { src: "uploads/butterfly/door-02.jpg", w: 2 }
+            ],
+            breakdown: [
+              { src: "uploads/butterfly/texturing.png", caption: "01 — 材質繪製：門板與封條 UDIM 貼圖、鏽蝕與斑駁舊化", wide: true }
+            ],
+            desc: "大廈建築資產製作，從量體結構、立面分件到門窗框架與細部裝飾，建立可對應鏡頭距離的建築資產與材質。道具如封鎖木門，以鐵鍊、門鎖、鉸鍊與「管制領域・嚴禁靠近」封條強化敘事，並以 UDIM 多象限貼圖繪製油漆剝落與潮濕舊化。",
             tags: ["MAYA", "ZBRUSH", "SUBSTANCE PAINTER", "REDSHIFT"],
             specs: [{ k: "ROLE", v: "3D Asset Artist" }, { k: "SCOPE", v: "建模 · 材質 · 算圖" }, { k: "TYPE", v: "Film Asset" }] },
           { label: "FILM — 03", title: "虎式坦克", subtitle: "HARD SURFACE ASSET / 模型製作", image: "uploads/film/tiger-tank.png",
@@ -871,8 +898,18 @@ class Component extends DCLogic {
     const css = (u) => (u ? 'url("' + encodeURI(u) + '")' : "none");
     const RATIOS = {
       "uploads/auto/board.png": "5694 / 7525",
-      "uploads/film/world-02.png": "2232 / 3508",
-      "uploads/film/butterfly-tower.png": "2232 / 3508",
+      "uploads/world/final-shot.jpg": "2576 / 1278",
+      "uploads/world/render-01.jpg": "2576 / 1449",
+      "uploads/world/render-02.jpg": "2576 / 1449",
+      "uploads/world/render-03.jpg": "2576 / 1449",
+      "uploads/world/sides.jpg": "2576 / 1449",
+      "uploads/world/clay.png": "1920 / 1080",
+      "uploads/butterfly/view-01.jpg": "8000 / 4449",
+      "uploads/butterfly/view-02.jpg": "8000 / 4500",
+      "uploads/butterfly/detail-01.jpg": "4412 / 4500",
+      "uploads/butterfly/door-01.jpg": "4412 / 4462",
+      "uploads/butterfly/door-02.jpg": "4391 / 4500",
+      "uploads/butterfly/texturing.png": "1884 / 978",
       "uploads/film/tiger-tank.png": "2232 / 2466",
       "uploads/kungfu/asset-01.png": "4000 / 1680",
       "uploads/kungfu/asset-02.png": "3302 / 1680",
